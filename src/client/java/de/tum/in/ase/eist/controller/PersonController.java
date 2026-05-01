@@ -77,8 +77,8 @@ public class PersonController {
         webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("persons")
-                        .queryParam("sortField", "sortField")
-                        .queryParam("sortingOrder", "sortingOrder")
+                        .queryParam("sortField", sortingOptions.getSortField())
+                        .queryParam("sortingOrder", sortingOptions.getSortingOrder())
                         .build())
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<Person>>() {
