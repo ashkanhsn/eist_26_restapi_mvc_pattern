@@ -21,4 +21,35 @@ public class PersonResource {
     }
 
     // TODO Part 1: Implement the specified endpoints here
+    @PostMapping("persons")
+    public ResponseEntity<Person> createPerson(@RequestBody Person person) {
+        if (person.getId() != null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(personService.savePerson(person));
+    }
+
+    @PutMapping("persons/{personId}")
+    public ResponseEntity<Person> updatePerson(@RequestBody Person person, @PathVariable UUID personId) {
+        if (!person.getId().equals(personId)) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(personService.savePerson(person));
+    }
+
+    @DeleteMapping("persons/{personId}")
+    public ResponseEntity<Void> deletePerson(@PathVariable UUID personId) {
+        personService.deletePerson(personId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("persons")
+    public ResponseEntity<List<Person>> getAllPersons(
+            @RequestParam("sortField") PersonSortingOptions.SortField sortField,
+            @RequestParam("sortingOrder") PersonSortingOptions.SortingOrder sortingOrder) {
+        PersonSortingOptions sort = new PersonSortingOptions(sortingOrder, sortField);
+        return ResponseEntity.ok(personService.getAllPersons(sort));
+    }
+
+
 }

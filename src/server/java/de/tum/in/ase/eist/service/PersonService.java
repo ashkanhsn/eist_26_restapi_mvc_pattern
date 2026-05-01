@@ -10,7 +10,7 @@ import static de.tum.in.ase.eist.util.PersonSortingOptions.SortingOrder.ASCENDIN
 
 @Service
 public class PersonService {
-  	// do not change this
+    // do not change this
     private final List<Person> persons;
 
     public PersonService() {
@@ -38,6 +38,34 @@ public class PersonService {
 
     public List<Person> getAllPersons(PersonSortingOptions sortingOptions) {
         // TODO Part 3: Add sorting here
-        return new ArrayList<>(this.persons);
+        PersonSortingOptions.SortField sortField = sortingOptions.getSortField();
+        if (sortField == null) {
+            sortField = PersonSortingOptions.SortField.ID;
+        }
+        PersonSortingOptions.SortingOrder sortingOrder = sortingOptions.getSortingOrder();
+        if (sortingOrder == null) {
+            sortingOrder = ASCENDING;
+        }
+        Comparator<Person> personComparator = null;
+        switch (sortField) {
+            case ID:
+                personComparator = Comparator.comparing(Person::getId);
+                break;
+            case BIRTHDAY:
+                personComparator = Comparator.comparing(Person::getBirthday);
+                break;
+            case LAST_NAME:
+                personComparator = Comparator.comparing(Person::getLastName);
+                break;
+            case FIRST_NAME:
+                personComparator = Comparator.comparing(Person::getFirstName);
+                break;
+        }
+        if (sortingOrder == PersonSortingOptions.SortingOrder.DESCENDING) {
+            personComparator = personComparator.reversed();
+        }
+
+        return persons.stream().sorted(personComparator).toList();
+
     }
 }
