@@ -45,8 +45,8 @@ public class PersonResource {
 
     @GetMapping("persons")
     public ResponseEntity<List<Person>> getAllPersons(
-            @RequestParam("sortField") PersonSortingOptions.SortField sortField,
-            @RequestParam("sortingOrder") PersonSortingOptions.SortingOrder sortingOrder) {
+            @RequestParam(value = "sortField", defaultValue = "ID") PersonSortingOptions.SortField sortField,
+            @RequestParam(value = "sortingOrder", defaultValue = "ASCENDING") PersonSortingOptions.SortingOrder sortingOrder) {
         PersonSortingOptions sort = new PersonSortingOptions(sortingOrder, sortField);
         return ResponseEntity.ok(personService.getAllPersons(sort));
     }
